@@ -196,11 +196,6 @@ select.form-input { appearance: none; cursor: pointer; background-image: url("da
       </div>
 
       <div class="form-group">
-        <div class="form-label">Grupo muscular</div>
-        <div class="muscle-grid" id="muscle-grid"></div>
-      </div>
-
-      <div class="form-group">
         <div class="form-label">Energía de hoy</div>
         <div class="energy-row">
           <div class="energy-btn fuerte" data-energy="fuerte" onclick="selectEnergy(this)">
@@ -215,16 +210,19 @@ select.form-input { appearance: none; cursor: pointer; background-image: url("da
         </div>
       </div>
 
+      <button class="btn btn-primary" onclick="addExercise()" style="font-size:var(--text-lg);">➕ Agregar ejercicio</button>
+
       <div id="exercises-container"></div>
 
-      <button class="btn btn-secondary" onclick="addExercise()">➕ Agregar ejercicio</button>
-
-      <div class="form-group">
-        <div class="form-label">Notas del día</div>
-        <textarea class="form-input" id="session-notes" placeholder="¿Cómo te fue hoy?" rows="2" style="resize:none;min-height:80px;font-size:var(--text-base);"></textarea>
+      <div id="registro-footer" class="hidden">
+        <div class="form-group" style="margin-bottom:14px;">
+          <div class="form-label">Notas del día</div>
+          <textarea class="form-input" id="session-notes" placeholder="¿Cómo te fue hoy?" rows="2" style="resize:none;min-height:80px;font-size:var(--text-base);"></textarea>
+        </div>
+        <button class="btn btn-secondary" onclick="addExercise()" style="margin-bottom:10px;">➕ Agregar otro ejercicio</button>
+        <button class="btn btn-primary" onclick="saveSession()">💾 Guardar entrenamiento</button>
       </div>
 
-      <button class="btn btn-primary" onclick="saveSession()">💾 Guardar entrenamiento</button>
       <div style="height:8px;flex-shrink:0;"></div>
     </div>
 
@@ -433,8 +431,9 @@ function confirmAddExercise() {
   const custom=document.getElementById('ej-nombre-custom').value.trim();
   const fromList=document.getElementById('ej-nombre').value;
   const name=custom||fromList;
+  const muscle=document.getElementById('ej-categoria').value;
   if(!name){alert('Selecciona o escribe un ejercicio'); return;}
-  state.today.exercises.push({name, equipo:state.selectedEquip, sets:[{weight:'',reps:''}]});
+  state.today.exercises.push({name, equipo:state.selectedEquip, muscle, sets:[{weight:'',reps:''}]});
   closeModal('modal-ejercicio');
   renderExercises();
 }
@@ -455,7 +454,9 @@ function selectEnergy(el){
 
 function renderExercises() {
   const container=document.getElementById('exercises-container');
-  if(!state.today.exercises.length){container.innerHTML=''; return;}
+  const footer=document.getElementById('registro-footer');
+  if(!state.today.exercises.length){container.innerHTML=''; footer.classList.add('hidden'); return;}
+  footer.classList.remove('hidden');
   container.innerHTML=state.today.exercises.map((ex,ei)=>{
     const lastW=getLastWeight(ex.name);
     const pr=getPR(ex.name);
@@ -502,18 +503,21 @@ function removeSet(ei,si){if(state.today.exercises[ei].sets.length>1){state.toda
 function removeExercise(ei){state.today.exercises.splice(ei,1); renderExercises();}
 
 function saveSession(){
-  if(!state.today.muscle){alert('Selecciona un grupo muscular'); return;}
   if(!state.today.exercises.length){alert('Agrega al menos un ejercicio'); return;}
   if(!state.today.exercises.some(ex=>ex.sets.some(s=>s.weight||s.reps))){alert('Registra al menos un peso o repeticiones'); return;}
+  // derive muscle from the exercises' categories (use most frequent)
+  const muscleTally={};
+  state.today.exercises.forEach(ex=>{ if(ex.muscle){muscleTally[ex.muscle]=(muscleTally[ex.muscle]||0)+1;} });
+  const dominantMuscle=Object.keys(muscleTally).sort((a,b)=>muscleTally[b]-muscleTally[a])[0] || state.today.muscle || 'pecho';
   state.sessions.push({
     id:Date.now(), date:new Date().toISOString(),
-    muscle:state.today.muscle, energy:state.today.energy,
+    muscle:dominantMuscle, energy:state.today.energy,
     notes:document.getElementById('session-notes').value,
     exercises:JSON.parse(JSON.stringify(state.today.exercises))
   });
   saveState();
   state.today={muscle:'',energy:'normal',exercises:[],notes:''};
-  renderMuscleGrid(); renderExercises();
+  renderExercises();
   document.getElementById('session-notes').value='';
   document.querySelectorAll('.energy-btn').forEach(b=>{b.classList.remove('selected'); if(b.dataset.energy==='normal') b.classList.add('selected');});
   showPage('historial');
@@ -649,7 +653,7 @@ function closeModal(id){document.getElementById(id).classList.add('hidden');}
 function init(){
   loadState();
   document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
-  renderMuscleGrid(); renderExercises();
+  renderExercises();
 }
 init();
 </script>
