@@ -75,6 +75,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .btn-danger{background:rgba(255,85,85,.15);color:var(--danger);border:2px solid rgba(255,85,85,.35);}
 .btn-ghost{background:transparent;color:var(--muted);border:2px solid var(--border);}
 
+
 /* ═══ YOUTUBE TUTORIAL BUTTON ═══ */
 .yt-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:2px solid rgba(255,50,50,.35);background:rgba(255,50,50,.08);color:#ff6060;font-family:var(--font-body);font-size:var(--sm);font-weight:700;cursor:pointer;touch-action:manipulation;transition:all .15s;text-decoration:none;white-space:nowrap;min-height:44px;}
 .yt-btn:active{background:rgba(255,50,50,.2);transform:scale(.96);}
@@ -92,6 +93,7 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 .energy-row{display:flex;gap:10px;}
 .energy-btn{flex:1;min-height:82px;padding:12px 6px;border-radius:16px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;text-align:center;transition:all .15s;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
 .energy-emoji{font-size:32px;}
+
 .energy-label{font-size:var(--sm);color:var(--muted);font-family:var(--font-body);font-weight:700;}
 .energy-btn.selected.fuerte{border-color:var(--success);background:rgba(77,255,145,.1);}
 .energy-btn.selected.fuerte .energy-label{color:var(--success);}
@@ -214,7 +216,8 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 }
 .timer-go-subtitle{font-size:var(--lg);color:var(--muted);font-weight:600;text-align:center;animation:fadeUp .5s .2s both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.start-btn{background:var(--accent);color:#000;font-family:var(--font-display);font-size:50px;letter-spacing:2px;border:none;border-radius:28px;width:200px;height:80px;cursor:pointer;touch-action:manipulation;transition:transform .1s;}
+
+   .start-btn{background:var(--accent);color:#000;font-family:var(--font-display);font-size:50px;letter-spacing:2px;border:none;border-radius:28px;width:200px;height:80px;cursor:pointer;touch-action:manipulation;transition:transform .1s;display:flex;justify-content:center;align-items:center;}
 .start-btn:active{transform:scale(.96);}
 .progress-bar-wrap{width:260px;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-top:16px;}
 .progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s linear;}
@@ -239,6 +242,55 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+/* ═══ WIZARD STYLES ═══ */
+.wizard-header{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.wizard-back-btn{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:pointer;padding:4px 0;text-align:left;touch-action:manipulation;}
+.wizard-back-btn:active{color:var(--text);}
+.wizard-steps{display:flex;align-items:center;gap:0;}
+.wiz-step{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
+.wiz-num{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);color:var(--muted);font-size:var(--sm);font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.wiz-lbl{font-size:11px;color:var(--muted);font-weight:500;transition:color .2s;}
+.wiz-step.active .wiz-num{border-color:var(--accent);background:var(--accent);color:#000;}
+.wiz-step.active .wiz-lbl{color:var(--accent);}
+.wiz-step.done .wiz-num{border-color:var(--accent2);background:rgba(168,201,58,.15);color:var(--accent2);}
+.wiz-step.done .wiz-lbl{color:var(--accent2);}
+.wiz-divider{flex:1;height:2px;background:var(--border);margin:0 4px;margin-bottom:18px;transition:background .2s;}
+.wiz-divider.done{background:var(--accent2);}
+.wiz-title{font-family:var(--font-display);font-size:var(--xxl);color:var(--text);margin-bottom:6px;line-height:1.1;}
+.wiz-subtitle{font-size:var(--sm);color:var(--muted);margin-bottom:14px;font-weight:500;}
+.wiz-panel{display:none;flex-direction:column;animation:wizIn .2s ease-out;}
+.wiz-panel.active{display:flex;}
+@keyframes wizIn{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:translateX(0);}}
+
+/* Muscle grid — wizard */
+.wiz-muscle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.wiz-muscle-btn{min-height:72px;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:12px;padding:0 16px;transition:all .15s;touch-action:manipulation;}
+.wiz-muscle-btn:active{border-color:var(--accent);background:rgba(212,245,71,.1);}
+.wiz-muscle-icon{font-size:26px;flex-shrink:0;}
+
+/* Equipment grid — wizard */
+.wiz-equip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.wiz-equip-btn{min-height:76px;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:all .15s;touch-action:manipulation;}
+.wiz-equip-btn:active{border-color:var(--accent);background:rgba(212,245,71,.1);}
+.wiz-equip-icon{font-size:28px;}
+
+/* Exercise list — wizard */
+.wiz-ex-list{display:flex;flex-direction:column;gap:8px;max-height:42vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.wiz-ex-btn{min-height:64px;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;text-align:left;transition:all .15s;touch-action:manipulation;}
+.wiz-ex-btn:active{border-color:var(--accent);background:rgba(212,245,71,.08);}
+.wiz-ex-name{flex:1;line-height:1.3;}
+.wiz-ex-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.wiz-ex-select{background:var(--accent);color:#000;border:none;border-radius:10px;padding:8px 14px;font-family:var(--font-body);font-size:var(--sm);font-weight:700;cursor:pointer;min-height:40px;touch-action:manipulation;}
+
+/* ═══ CENTERED MODAL (wizard) ═══ */
+.modal-overlay-center{align-items:center;}
+.modal-overlay-center .modal{
+  border-radius:22px;
+  max-height:90vh;
+  width:calc(100% - 32px);
+  max-width:480px;
+}
 </style>
 </head>
 <body>
@@ -372,70 +424,59 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
   </div>
 </div>
 
-<!-- ══ MODAL: Agregar ejercicio ══ -->
-<div id="modal-add-ex" class="modal-overlay hidden" onclick="closeModal('modal-add-ex')">
+<!-- ══ MODAL: Agregar ejercicio — WIZARD 3 pasos ══ -->
+<div id="modal-add-ex" class="modal-overlay modal-overlay-center hidden" onclick="wizBgClick(event)">
   <div class="modal" onclick="event.stopPropagation()" style="max-height:96vh;">
     <div class="modal-handle"></div>
-    <div class="modal-title">➕ Nuevo ejercicio</div>
 
-    <div class="form-group" style="margin-bottom:20px;">
-      <div class="form-label">Grupo muscular</div>
-      <select class="form-input" id="ej-categoria" onchange="updateEjList()" style="font-size:var(--md);">
-        <option value="">— Selecciona grupo —</option>
-        <option value="pecho">🫁  Pecho</option>
-        <option value="espalda">🔙  Espalda</option>
-        <option value="piernas">🦵  Piernas</option>
-        <option value="hombros">🎯  Hombros</option>
-        <option value="brazos">💪  Brazos</option>
-        <option value="gluteos">🍑  Glúteos</option>
-        <option value="core">⚡  Core</option>
-        <option value="cardio">🏃  Cardio</option>
-      </select>
-    </div>
-
-    <div class="form-group" style="margin-bottom:14px;">
-      <div class="form-label">Ejercicio</div>
-      <select class="form-input" id="ej-nombre" onchange="updateModalTutorialBtn()" style="font-size:var(--md);">
-        <option value="">— Primero elige grupo —</option>
-      </select>
-    </div>
-    <div id="modal-tutorial-wrap" style="margin-bottom:20px;display:none;"></div>
-
-    <div class="form-group" style="margin-bottom:22px;">
-      <div class="form-label">Tipo de equipo</div>
-      <div class="equip-row">
-        <button class="equip-btn selected" data-equip="Máquina" onclick="selectEquip(this)"><span class="equip-icon">🏋️</span>Máquina</button>
-        <button class="equip-btn" data-equip="Mancuerna" onclick="selectEquip(this)"><span class="equip-icon">🥊</span>Mancuerna</button>
-        <button class="equip-btn" data-equip="Barra libre" onclick="selectEquip(this)"><span class="equip-icon">⚖️</span>Barra libre</button>
-        <button class="equip-btn" data-equip="Peso corporal" onclick="selectEquip(this)"><span class="equip-icon">🧘</span>Peso corporal</button>
+    <!-- Wizard header -->
+    <div class="wizard-header">
+      <button class="wizard-back-btn hidden" id="wiz-back" onclick="wizBack()">← Atrás</button>
+      <div class="wizard-steps" id="wiz-steps">
+        <div class="wiz-step active" data-step="1"><span class="wiz-num">1</span><span class="wiz-lbl">Músculo</span></div>
+        <div class="wiz-divider"></div>
+        <div class="wiz-step" data-step="2"><span class="wiz-num">2</span><span class="wiz-lbl">Equipo</span></div>
+        <div class="wiz-divider"></div>
+        <div class="wiz-step" data-step="3"><span class="wiz-num">3</span><span class="wiz-lbl">Ejercicio</span></div>
+        <div class="wiz-divider"></div>
+        <div class="wiz-step" data-step="4"><span class="wiz-num">4</span><span class="wiz-lbl">Descanso</span></div>
       </div>
     </div>
 
-    <div class="form-group" style="margin-bottom:26px;">
-      <div class="form-label">Descanso entre series</div>
-      <div class="rest-options">
-        <button class="rest-btn" data-rest="30" onclick="selectRest(this)">
-          <span class="rest-time">30</span><span class="rest-unit">seg</span>
-        </button>
-        <button class="rest-btn selected" data-rest="60" onclick="selectRest(this)">
-          <span class="rest-time">1</span><span class="rest-unit">min</span>
-        </button>
-        <button class="rest-btn" data-rest="90" onclick="selectRest(this)">
-          <span class="rest-time">1:30</span><span class="rest-unit">min</span>
-        </button>
-        <button class="rest-btn" data-rest="120" onclick="selectRest(this)">
-          <span class="rest-time">2</span><span class="rest-unit">min</span>
-        </button>
-        <button class="rest-btn" data-rest="180" onclick="selectRest(this)">
-          <span class="rest-time">3</span><span class="rest-unit">min</span>
-        </button>
-        <button class="rest-btn" data-rest="300" onclick="selectRest(this)">
-          <span class="rest-time">5</span><span class="rest-unit">min</span>
-        </button>
-      </div>
+    <!-- PASO 1: Músculo -->
+    <div class="wiz-panel active" id="wiz-panel-1">
+      <div class="wiz-title">¿Qué músculo vas a trabajar?</div>
+      <div class="wiz-muscle-grid" id="wiz-muscle-grid"></div>
     </div>
 
-    <button class="btn btn-primary" onclick="confirmAddEx()" style="font-size:var(--lg);">Siguiente → Configurar carga</button>
+    <!-- PASO 2: Equipo -->
+    <div class="wiz-panel" id="wiz-panel-2">
+      <div class="wiz-title">¿Con qué equipo?</div>
+      <div class="wiz-subtitle" id="wiz-sub-2"></div>
+      <div class="wiz-equip-grid" id="wiz-equip-grid"></div>
+    </div>
+
+    <!-- PASO 3: Ejercicio -->
+    <div class="wiz-panel" id="wiz-panel-3">
+      <div class="wiz-title">Elige el ejercicio</div>
+      <div class="wiz-subtitle" id="wiz-sub-3"></div>
+      <div class="wiz-ex-list" id="wiz-ex-list"></div>
+    </div>
+
+    <!-- PASO 4: Descanso -->
+    <div class="wiz-panel" id="wiz-panel-4">
+      <div class="wiz-title">Descanso entre series</div>
+      <div class="wiz-subtitle" id="wiz-sub-4"></div>
+      <div class="rest-options" style="margin-top:16px;">
+        <button class="rest-btn" data-rest="30" onclick="wizSelectRest(this)"><span class="rest-time">30</span><span class="rest-unit">seg</span></button>
+        <button class="rest-btn selected" data-rest="60" onclick="wizSelectRest(this)"><span class="rest-time">1</span><span class="rest-unit">min</span></button>
+        <button class="rest-btn" data-rest="90" onclick="wizSelectRest(this)"><span class="rest-time">1:30</span><span class="rest-unit">min</span></button>
+        <button class="rest-btn" data-rest="120" onclick="wizSelectRest(this)"><span class="rest-time">2</span><span class="rest-unit">min</span></button>
+        <button class="rest-btn" data-rest="180" onclick="wizSelectRest(this)"><span class="rest-time">3</span><span class="rest-unit">min</span></button>
+        <button class="rest-btn" data-rest="300" onclick="wizSelectRest(this)"><span class="rest-time">5</span><span class="rest-unit">min</span></button>
+      </div>
+      <button class="btn btn-primary" onclick="wizConfirm()" style="margin-top:24px;font-size:var(--lg);">Configurar carga →</button>
+    </div>
   </div>
 </div>
 
@@ -515,23 +556,89 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 /* ════════════════════════════════════════
    DATA
 ════════════════════════════════════════ */
-const EX_DB = {
-  pecho:   ['Press de banca plano','Press de banca inclinado','Press de banca declinado','Aperturas con mancuernas','Aperturas en máquina','Cruce de poleas alto','Cruce de poleas bajo','Fondos en paralelas','Pullover','Press con mancuernas inclinado','Press en máquina de pecho'],
-  espalda: ['Dominadas','Remo con barra','Remo con mancuerna','Jalón al pecho','Jalón agarre cerrado','Remo en máquina','Remo en polea baja','Peso muerto','Hiperextensiones','Pull-over en polea','Remo en T'],
-  piernas: ['Sentadilla con barra','Sentadilla goblet','Prensa de piernas','Extensiones de cuádriceps','Curl de isquios tumbado','Curl de isquios de pie','Zancadas','Sentadilla búlgara','Elevación de gemelos de pie','Elevación de gemelos sentado','Peso muerto rumano'],
-  hombros: ['Press militar con barra','Press con mancuernas','Elevaciones laterales','Elevaciones frontales','Pájaros (posterior)','Encogimientos de hombros','Press Arnold','Face pull','Press en máquina','Elevaciones en polea'],
-  brazos:  ['Curl con barra','Curl con mancuernas alterno','Curl martillo','Curl en polea','Press francés','Extensión tríceps en polea','Fondos de tríceps','Patada de tríceps','Curl concentrado','Curl en banco Scott'],
-  gluteos: ['Hip thrust','Patada de glúteo en máquina','Abducción de cadera','Sentadilla sumo','Peso muerto rumano','Puente de glúteos','Zancadas hacia atrás','Step-up en banco','Cable kickback'],
-  core:    ['Plancha frontal','Crunch abdominal','Rueda abdominal','Elevación de piernas','Crunch en polea','Oblicuos con mancuerna','Plancha lateral','Sit-ups','Mountain climbers','Dragon flag'],
-  cardio:  ['Cinta de correr','Bicicleta estática','Elíptica','Remo ergómetro','Saltar a la comba','Escaladora','HIIT','Spinning','Caminar inclinado','Burpees']
-};
+/* ════ 3-LEVEL EXERCISE DATABASE: muscle → equipment → exercises ════ */
 const MUSCLES = [
-  {id:'pecho',label:'Pecho',emoji:'🫁'},{id:'espalda',label:'Espalda',emoji:'🔙'},
-  {id:'piernas',label:'Piernas',emoji:'🦵'},{id:'hombros',label:'Hombros',emoji:'🎯'},
-  {id:'brazos',label:'Brazos',emoji:'💪'},{id:'gluteos',label:'Glúteos',emoji:'🍑'},
-  {id:'core',label:'Core',emoji:'⚡'},{id:'cardio',label:'Cardio',emoji:'🏃'},
+  {id:'pecho',   label:'Pecho',    emoji:'🫁'},
+  {id:'espalda', label:'Espalda',  emoji:'🔙'},
+  {id:'piernas', label:'Piernas',  emoji:'🦵'},
+  {id:'hombros', label:'Hombros',  emoji:'🎯'},
+  {id:'biceps',  label:'Bíceps',   emoji:'💪'},
+  {id:'triceps', label:'Tríceps',  emoji:'🦾'},
+  {id:'gluteos', label:'Glúteos',  emoji:'🍑'},
+  {id:'core',    label:'Core',     emoji:'⚡'},
+  {id:'cardio',  label:'Cardio',   emoji:'🏃'},
 ];
-const EQUIP_ICONS = {'Máquina':'🏋️','Mancuerna':'🥊','Barra libre':'⚖️','Peso corporal':'🧘'};
+
+const EQUIP_BY_MUSCLE = {
+  pecho:   [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'maquina',  label:'Máquina',       icon:'🏋️'},{id:'polea',    label:'Polea',          icon:'🔗'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+  espalda: [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'maquina',  label:'Máquina',       icon:'🏋️'},{id:'polea',    label:'Polea',          icon:'🔗'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+  piernas: [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'maquina',  label:'Máquina',       icon:'🏋️'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+  hombros: [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'maquina',  label:'Máquina',       icon:'🏋️'},{id:'polea',    label:'Polea',          icon:'🔗'}],
+  biceps:  [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'polea',    label:'Polea',          icon:'🔗'},{id:'maquina',  label:'Máquina',       icon:'🏋️'}],
+  triceps: [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'polea',    label:'Polea',          icon:'🔗'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+  gluteos: [{id:'barra',     label:'Barra libre',    icon:'⚖️'},{id:'maquina',  label:'Máquina',       icon:'🏋️'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+  core:    [{id:'corporal',  label:'Peso corporal',  icon:'🧘'},{id:'polea',    label:'Polea',          icon:'🔗'},{id:'mancuerna', label:'Mancuernas',    icon:'🥊'}],
+  cardio:  [{id:'maquina',   label:'Máquina',        icon:'🏋️'},{id:'corporal', label:'Peso corporal',  icon:'🧘'}],
+};
+
+const EX_DB = {
+  pecho: {
+    barra:     ['Press de banca plano','Press de banca inclinado','Press de banca declinado','Fondos con peso en paralelas','Press tras nuca'],
+    mancuerna: ['Press con mancuernas plano','Press con mancuernas inclinado','Aperturas planas','Aperturas inclinadas','Pullover con mancuerna'],
+    maquina:   ['Press en máquina de pecho','Aperturas en peck deck','Press convergente','Chest press'],
+    polea:     ['Cruce de poleas alto','Cruce de poleas bajo','Cruce de poleas neutro'],
+    corporal:  ['Fondos en paralelas','Flexiones','Flexiones inclinadas','Flexiones declinadas'],
+  },
+  espalda: {
+    barra:     ['Peso muerto convencional','Remo con barra pronado','Remo con barra supino','Remo Pendlay'],
+    mancuerna: ['Remo con mancuerna unilateral','Pullover con mancuerna','Peso muerto con mancuernas'],
+    maquina:   ['Remo en máquina sentado','Jalón al pecho en máquina','Pull-over en máquina','Row en máquina'],
+    polea:     ['Jalón al pecho agarre ancho','Jalón al pecho agarre cerrado','Remo en polea baja','Pull-over en polea','Face pull'],
+    corporal:  ['Dominadas agarre prono','Dominadas agarre supino','Dominadas agarre neutro','Hiperextensiones'],
+  },
+  piernas: {
+    barra:     ['Sentadilla trasera','Sentadilla frontal','Peso muerto rumano','Sentadilla sumo','Zancadas con barra'],
+    mancuerna: ['Sentadilla goblet','Zancadas con mancuernas','Sentadilla búlgara','Peso muerto rumano con mancuernas','Step-up con mancuernas'],
+    maquina:   ['Prensa de piernas','Extensiones de cuádriceps','Curl de isquios tumbado','Curl de isquios de pie','Elevación de gemelos en máquina','Abductor','Aductor'],
+    corporal:  ['Sentadilla sin peso','Zancadas','Sentadilla a una pierna','Elevación de gemelos sin peso','Sentadilla sumo sin peso'],
+  },
+  hombros: {
+    barra:     ['Press militar de pie','Press militar sentado','Press tras nuca','Elevaciones frontales con barra'],
+    mancuerna: ['Press con mancuernas sentado','Elevaciones laterales','Elevaciones frontales','Pájaros (posterior)','Press Arnold','Encogimientos'],
+    maquina:   ['Press en máquina de hombros','Elevaciones laterales en máquina','Pájaros en máquina'],
+    polea:     ['Elevaciones laterales en polea','Face pull','Elevaciones frontales en polea'],
+  },
+  biceps: {
+    barra:     ['Curl con barra recta','Curl con barra Z','Curl en banco Scott con barra','Curl 21s'],
+    mancuerna: ['Curl con mancuernas alterno','Curl martillo','Curl concentrado','Curl en banco Scott','Curl inclinado'],
+    polea:     ['Curl en polea baja','Curl en polea alta','Curl con cuerda'],
+    maquina:   ['Curl en máquina','Curl en banco predicador máquina'],
+  },
+  triceps: {
+    barra:     ['Press francés con barra','Close grip bench press','Press de banca agarre cerrado'],
+    mancuerna: ['Press francés con mancuerna','Extensión con mancuerna sobre cabeza','Patada de tríceps'],
+    polea:     ['Extensión en polea alta con barra','Extensión en polea con cuerda','Extensión en polea baja','Extensión sobre cabeza en polea'],
+    corporal:  ['Fondos de tríceps en banco','Fondos en paralelas cerrado','Flexiones diamante'],
+  },
+  gluteos: {
+    barra:     ['Hip thrust con barra','Sentadilla trasera','Peso muerto rumano','Sentadilla sumo con barra'],
+    maquina:   ['Patada de glúteo en máquina','Abducción de cadera en máquina','Prensa de piernas (énfasis glúteo)'],
+    mancuerna: ['Hip thrust con mancuerna','Zancadas con mancuernas','Step-up con mancuernas','Peso muerto rumano con mancuernas'],
+    corporal:  ['Puente de glúteos','Hip thrust sin peso','Patada de glúteo cuadrupedia','Sentadilla sumo sin peso','Zancadas sin peso'],
+  },
+  core: {
+    corporal:  ['Plancha frontal','Plancha lateral','Crunch abdominal','Sit-ups','Elevación de piernas tumbado','Elevación de piernas colgado','Mountain climbers','Rueda abdominal','Dragon flag','Hollow body hold'],
+    polea:     ['Crunch en polea','Oblicuos en polea','Pallof press'],
+    mancuerna: ['Oblicuos con mancuerna','Farmer carry','Suitcase carry'],
+  },
+  cardio: {
+    maquina:   ['Cinta de correr','Bicicleta estática','Elíptica','Escaladora (stairmaster)','Remo ergómetro','Bicicleta spinning'],
+    corporal:  ['Burpees','Saltar a la comba','HIIT','Mountain climbers','Jumping jacks','Correr'],
+  },
+};
+
+const EQUIP_ICONS = {'barra':'⚖️','mancuerna':'🥊','maquina':'🏋️','polea':'🔗','corporal':'🧘'};
+
 
 let state = {
   sessions:[], rutinas:[],
@@ -603,53 +710,140 @@ function selectEnergy(el){
   el.classList.add('selected'); state.today.energy=el.dataset.energy; renderExercises();
 }
 
-/* ════════════ ADD EX MODAL ════════════ */
+/* ════════════ WIZARD: Músculo → Equipo → Ejercicio → Descanso ════════════ */
+let wiz = { muscle:null, muscleLabel:'', equip:null, equipLabel:'', exercise:'', restSecs:60 };
+
 function openAddExModal(){
-  document.getElementById('ej-categoria').value='';
-  document.getElementById('ej-nombre').innerHTML='<option value="">— Primero elige grupo —</option>';
-  state.selectedEquip='Máquina';
-  state.selectedRest=60;
-  document.querySelectorAll('.equip-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.equip==='Máquina');});
-  document.querySelectorAll('.rest-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.rest==='60');});
+  wiz = { muscle:null, muscleLabel:'', equip:null, equipLabel:'', exercise:'', restSecs:60, step:1 };
+  // Reset all panels before opening
+  [1,2,3,4].forEach(n=>{
+    const p=document.getElementById('wiz-panel-'+n);
+    if(p) p.style.display = n===1 ? 'flex' : 'none';
+  });
+  wizRenderMuscles();
+  const back=document.getElementById('wiz-back');
+  if(back) back.classList.add('hidden');
   openModal('modal-add-ex');
 }
 
-function updateEjList(){
-  const cat=document.getElementById('ej-categoria').value;
-  const sel=document.getElementById('ej-nombre');
-  sel.innerHTML='<option value="">— Selecciona ejercicio —</option>';
-  if(cat&&EX_DB[cat]) EX_DB[cat].forEach(e=>{const o=document.createElement('option');o.value=e;o.textContent=e;sel.appendChild(o);});
-  updateModalTutorialBtn();
+function wizBgClick(e){ if(e.target===e.currentTarget) closeModal('modal-add-ex'); }
+
+function wizGoStep(step){
+  // Show/hide panels — use style.display directly to avoid hidden class conflicts
+  [1,2,3,4].forEach(n=>{
+    const p=document.getElementById('wiz-panel-'+n);
+    if(p) p.style.display = (n===step) ? 'flex' : 'none';
+  });
+
+  // Update step indicators
+  document.querySelectorAll('.wiz-step').forEach(el=>{
+    const n=parseInt(el.dataset.step);
+    el.classList.toggle('active', n===step);
+    el.classList.toggle('done', n<step);
+  });
+  document.querySelectorAll('.wiz-divider').forEach((el,i)=>{
+    el.classList.toggle('done', i+1 < step);
+  });
+
+  // Back button
+  const back=document.getElementById('wiz-back');
+  if(back) { step>1 ? back.classList.remove('hidden') : back.classList.add('hidden'); }
+
+  // Render content
+  if(step===1) wizRenderMuscles();
+  if(step===2) wizRenderEquip();
+  if(step===3) wizRenderExercises();
+  if(step===4) wizRenderRestSummary();
+
+  wiz.step = step;
 }
 
-function updateModalTutorialBtn(){
-  const name=document.getElementById('ej-nombre').value;
-  const wrap=document.getElementById('modal-tutorial-wrap');
-  if(!wrap) return;
-  if(name){
-    wrap.style.display='block';
-    wrap.innerHTML=ytTutorialBtn(name);
-  } else {
-    wrap.style.display='none';
-    wrap.innerHTML='';
+function wizBack(){ wizGoStep(wiz.step-1); }
+
+function wizRenderMuscles(){
+  const grid=document.getElementById('wiz-muscle-grid');
+  grid.innerHTML=MUSCLES.map(m=>
+    `<button class="wiz-muscle-btn" onclick="wizPickMuscle('${m.id}','${m.label}')">
+      <span class="wiz-muscle-icon">${m.emoji}</span>${m.label}
+    </button>`
+  ).join('');
+}
+
+function wizPickMuscle(id, label){
+  wiz.muscle=id; wiz.muscleLabel=label;
+  wizGoStep(2);
+}
+
+function wizRenderEquip(){
+  document.getElementById('wiz-sub-2').textContent=wiz.muscleLabel;
+  const grid=document.getElementById('wiz-equip-grid');
+  const options=EQUIP_BY_MUSCLE[wiz.muscle]||[];
+  grid.innerHTML=options.map(e=>
+    `<button class="wiz-equip-btn" onclick="wizPickEquip('${e.id}','${e.label}')">
+      <span class="wiz-equip-icon">${e.icon}</span>${e.label}
+    </button>`
+  ).join('');
+}
+
+function wizPickEquip(id, label){
+  wiz.equip=id; wiz.equipLabel=label;
+  wizGoStep(3);
+}
+
+function wizRenderExercises(){
+  document.getElementById('wiz-sub-3').textContent=wiz.muscleLabel+' · '+wiz.equipLabel;
+  const list=document.getElementById('wiz-ex-list');
+  const exercises=(EX_DB[wiz.muscle]||{})[wiz.equip]||[];
+  if(!exercises.length){
+    list.innerHTML=`<div style="color:var(--muted);font-size:var(--base);padding:20px 0;text-align:center;">No hay ejercicios para esta combinación.</div>`;
+    return;
   }
+  list.innerHTML=exercises.map(ex=>{
+    const lastW=getLastWeight(ex);
+    const pr=getPR(ex);
+    const ytQ=encodeURIComponent(ex+' '+wiz.equipLabel+' tutorial técnica');
+    const ytUrl='https://www.youtube.com/results?search_query='+ytQ;
+    return `<div class="wiz-ex-btn">
+      <div class="wiz-ex-name">
+        ${ex}
+        ${lastW?`<div style="font-size:var(--sm);color:var(--accent);font-weight:500;margin-top:3px;">🕐 Última vez: ${lastW}kg${pr&&lastW>=pr?' 🏆':''}</div>`:''}
+      </div>
+      <div class="wiz-ex-actions">
+        <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="padding:6px 10px;font-size:var(--xs);min-height:38px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff6060"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          Tutorial
+        </a>
+        <button class="wiz-ex-select" onclick="wizPickExercise('${ex.replace(/'/g,"\'")}')">Elegir</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function selectEquip(el){
-  document.querySelectorAll('.equip-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected'); state.selectedEquip=el.dataset.equip;
+function wizPickExercise(name){
+  wiz.exercise=name;
+  wizGoStep(4);
 }
 
-function selectRest(el){
-  document.querySelectorAll('.rest-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected'); state.selectedRest=parseInt(el.dataset.rest);
+function wizRenderRestSummary(){
+  document.getElementById('wiz-sub-4').textContent=wiz.muscleLabel+' · '+wiz.equipLabel+' · '+wiz.exercise;
+  // Reset rest selection UI
+  document.querySelectorAll('#wiz-panel-4 .rest-btn').forEach(b=>{
+    b.classList.toggle('selected', b.dataset.rest==='60');
+  });
+  wiz.restSecs=60;
 }
 
-function confirmAddEx(){
-  const name=document.getElementById('ej-nombre').value;
-  const muscle=document.getElementById('ej-categoria').value;
-  if(!name){alert('Selecciona un ejercicio'); return;}
-  pending={name, muscle, equipo:state.selectedEquip, kg:0, reps:10, series:3, restSecs:state.selectedRest, completedSeries:0};
+function wizSelectRest(el){
+  document.querySelectorAll('#wiz-panel-4 .rest-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  wiz.restSecs=parseInt(el.dataset.rest);
+}
+
+function wizConfirm(){
+  pending={
+    name:wiz.exercise, muscle:wiz.muscle, equipo:wiz.equipLabel,
+    kg:0, reps:10, series:3, restSecs:wiz.restSecs, completedSeries:0
+  };
   closeModal('modal-add-ex');
   stepPhase=0;
   openStepOverlay();
@@ -751,7 +945,7 @@ function renderExercises(){
 function ytTutorialBtn(name){
   const q=encodeURIComponent(name+' tutorial gimnasio técnica');
   const url='https://www.youtube.com/results?search_query='+q;
-  return `<a class="yt-btn" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ff6060"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>Tutorial</a>`;
+  return `<a class="yt-btn" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ff6060"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>▶ Tutorial</a>`;
 }
 
 function fmtRest(s){
@@ -1076,5 +1270,20 @@ function init(){
 }
 init();
 </script>
+
+    <button class="video-close" onclick="closeVideoModal()">✕</button>
+  </div>
+  <div class="video-body">
+    <div class="video-frame-wrap" id="video-frame-wrap" style="display:none;">
+      <iframe id="video-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <div class="video-results" id="video-results">
+      <div class="video-loading">
+        <span class="video-loading-spinner">⏳</span>
+        Buscando tutoriales...
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
