@@ -285,11 +285,11 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 
 /* Exercise list — wizard */
 .wiz-ex-list{display:flex;flex-direction:column;gap:8px;max-height:42vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.wiz-ex-btn{min-height:64px;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;text-align:left;transition:all .15s;touch-action:manipulation;}
-.wiz-ex-btn:active{border-color:var(--accent);background:rgba(212,245,71,.08);}
-.wiz-ex-name{flex:1;line-height:1.3;}
-.wiz-ex-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.wiz-ex-select{background:var(--accent);color:#000;border:none;border-radius:10px;padding:8px 14px;font-family:var(--font-body);font-size:var(--sm);font-weight:700;cursor:pointer;min-height:40px;touch-action:manipulation;}
+.wiz-ex-btn{min-height:64px;height:auto;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--font-body);font-size:var(--base);font-weight:600;cursor:default;display:flex;align-items:flex-start;justify-content:space-between;padding:14px 16px;gap:10px;text-align:left;transition:all .15s;}
+.wiz-ex-name{flex:1;line-height:1.5;word-break:break-word;white-space:normal;}
+.wiz-ex-name .ex-last{font-size:var(--sm);color:var(--accent);font-weight:500;margin-top:3px;}
+.wiz-ex-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-top:2px;}
+.wiz-ex-select{background:var(--accent);color:#000;border:none;border-radius:10px;padding:8px 14px;font-family:var(--font-body);font-size:var(--sm);font-weight:700;cursor:pointer;min-height:40px;touch-action:manipulation;white-space:nowrap;}
 
 /* ═══ CENTERED MODAL (wizard) ═══ */
 .modal-overlay-center{align-items:center;}
@@ -827,17 +827,20 @@ function wizRenderExercises(){
     const pr=getPR(ex);
     const ytQ=encodeURIComponent(ex+' '+wiz.equipLabel+' tutorial técnica');
     const ytUrl='https://www.youtube.com/results?search_query='+ytQ;
+    const lastHtml=lastW
+      ? `<div class="ex-last">🕐 Última vez: ${lastW}kg${pr&&lastW>=pr?' 🏆':''}</div>`
+      : '';
     return `<div class="wiz-ex-btn">
       <div class="wiz-ex-name">
-        ${ex}
-        ${lastW?`<div style="font-size:var(--sm);color:var(--accent);font-weight:500;margin-top:3px;">🕐 Última vez: ${lastW}kg${pr&&lastW>=pr?' 🏆':''}</div>`:''}
+        <div>${ex}</div>
+        ${lastHtml}
       </div>
       <div class="wiz-ex-actions">
         <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="padding:6px 10px;font-size:var(--xs);min-height:38px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff6060"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           Tutorial
         </a>
-        <button class="wiz-ex-select" onclick="wizPickExercise('${ex.replace(/'/g,"\'")}')">Elegir</button>
+        <button class="wiz-ex-select" onclick="wizPickExercise('${ex.replace(/'/g,"\\'")}')">Elegir</button>
       </div>
     </div>`;
   }).join('');
@@ -1124,14 +1127,27 @@ function closeComplete(){
 }
 
 /* ════════════ SAVE SESSION ════════════ */
+function getMusclesSummary(exercises){
+  // Deduplicate muscles preserving order of first appearance
+  const seen = new Set();
+  const labels = [];
+  exercises.forEach(ex => {
+    const m = MUSCLES.find(m => m.id === ex.muscle);
+    if(m && !seen.has(m.id)){ seen.add(m.id); labels.push(m.emoji + ' ' + m.label); }
+  });
+  return labels.join(', ') || '—';
+}
+
 function saveSession(){
   if(!state.today.exercises.length){alert('Agrega al menos un ejercicio'); return;}
   const muscleTally={};
   state.today.exercises.forEach(ex=>{if(ex.muscle) muscleTally[ex.muscle]=(muscleTally[ex.muscle]||0)+1;});
   const dominantMuscle=Object.keys(muscleTally).sort((a,b)=>muscleTally[b]-muscleTally[a])[0]||'pecho';
+  const musclesSummary = getMusclesSummary(state.today.exercises);
   state.sessions.push({
     id:Date.now(), date:new Date().toISOString(),
     muscle:dominantMuscle, energy:state.today.energy,
+    musclesSummary,
     notes:document.getElementById('session-notes').value,
     exercises:JSON.parse(JSON.stringify(state.today.exercises))
   });
@@ -1153,16 +1169,17 @@ function renderHistorial(){
   list.innerHTML=[...state.sessions].reverse().map(s=>{
     const d=new Date(s.date);
     const label=d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
-    const muscle=MUSCLES.find(m=>m.id===s.muscle);
     const totalSets=s.exercises.reduce((a,e)=>a+(e.series||0),0);
     const maxW=s.exercises.reduce((a,e)=>Math.max(a,e.kg||0),0);
     const eIcon=s.energy==='fuerte'?'💪':s.energy==='cansado'?'😴':'😊';
+    // Muscles summary: use stored summary or compute from exercises for legacy sessions
+    const musclesSummary = s.musclesSummary || getMusclesSummary(s.exercises);
     return `<div class="session-card" style="margin-bottom:12px;" onclick="openSession(${s.id})">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="session-date">${label.toUpperCase()}</div>
         <span style="font-size:30px;">${eIcon}</span>
       </div>
-      <div class="session-muscle">${muscle?muscle.emoji+' '+muscle.label:s.muscle}</div>
+      <div class="session-muscle" style="margin-top:6px;font-size:var(--sm);line-height:1.5;">${musclesSummary}</div>
       <div class="session-stats">
         <div class="session-stat">🏋️ <strong>${s.exercises.length}</strong> ejercicios</div>
         <div class="session-stat">🔢 <strong>${totalSets}</strong> series</div>
@@ -1304,27 +1321,32 @@ function showPage(page){
 function openModal(id){document.getElementById(id).classList.remove('hidden');}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
 
+/* ════════════ WAKE LOCK (pantalla siempre encendida) ════════════ */
+let wakeLock = null;
+async function requestWakeLock(){
+  if('wakeLock' in navigator){
+    try{
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', ()=>{ wakeLock=null; });
+    }catch(e){ /* silently ignore if denied */ }
+  }
+}
+async function releaseWakeLock(){
+  if(wakeLock){ try{ await wakeLock.release(); }catch(e){} wakeLock=null; }
+}
+// Re-acquire on visibility change (iOS/Android release it when tab is hidden)
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible') requestWakeLock();
+});
+
 function init(){
   loadState();
   document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
   renderExercises();
+  requestWakeLock();
 }
 init();
 </script>
 
-    <button class="video-close" onclick="closeVideoModal()">✕</button>
-  </div>
-  <div class="video-body">
-    <div class="video-frame-wrap" id="video-frame-wrap" style="display:none;">
-      <iframe id="video-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-    </div>
-    <div class="video-results" id="video-results">
-      <div class="video-loading">
-        <span class="video-loading-spinner">⏳</span>
-        Buscando tutoriales...
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
