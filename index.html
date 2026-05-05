@@ -234,6 +234,18 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
 .series-dot.done{background:var(--accent);border-color:var(--accent);}
 .series-dot.current{border-color:var(--accent);}
 
+/* ═══ ALERT SETTINGS (timer) ═══ */
+.alert-settings{display:flex;gap:10px;align-items:center;margin-top:18px;}
+.alert-toggle{display:flex;align-items:center;gap:8px;background:var(--surface2);border:2px solid var(--border);border-radius:12px;padding:8px 14px;cursor:pointer;touch-action:manipulation;transition:all .15s;user-select:none;}
+.alert-toggle.on{border-color:var(--accent);background:rgba(212,245,71,.08);}
+.alert-toggle-icon{font-size:20px;}
+.alert-toggle-label{font-size:var(--sm);font-weight:700;color:var(--muted);}
+.alert-toggle.on .alert-toggle-label{color:var(--accent);}
+.alert-toggle-dot{width:34px;height:20px;border-radius:10px;background:var(--surface3);border:2px solid var(--border);position:relative;transition:all .2s;flex-shrink:0;}
+.alert-toggle.on .alert-toggle-dot{background:var(--accent);border-color:var(--accent);}
+.alert-toggle-dot::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;}
+.alert-toggle.on .alert-toggle-dot::after{transform:translateX(14px);}
+
 /* ═══ COMPLETE SCREEN ═══ */
 .complete-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:16px;}
 .complete-icon{font-size:80px;animation:popIn .4s ease-out;}
@@ -553,6 +565,23 @@ select.form-input{appearance:none;cursor:pointer;background-image:url("data:imag
   </div>
 
   <button onclick="closeTimer()" style="margin-top:20px;background:none;border:none;color:var(--muted);font-size:var(--base);font-family:var(--font-body);cursor:pointer;padding:10px;">Saltar y terminar</button>
+
+  <!-- Alert settings toggles -->
+  <div class="alert-settings">
+    <div class="alert-toggle on" id="toggle-sound" onclick="toggleAlert('sound')" title="Pitido al terminar descanso">
+      <span class="alert-toggle-icon">🔔</span>
+      <span class="alert-toggle-label">Pitido</span>
+      <div class="alert-toggle-dot"></div>
+    </div>
+    <div class="alert-toggle on" id="toggle-vibra" onclick="toggleAlert('vibra')" title="Vibración al terminar descanso">
+      <span class="alert-toggle-icon">📳</span>
+      <span class="alert-toggle-label">Vibración</span>
+      <div class="alert-toggle-dot"></div>
+    </div>
+  </div>
+  <div id="audio-unlock-hint" style="font-size:var(--xs);color:var(--muted);margin-top:8px;text-align:center;display:none;">
+    Toca la pantalla para activar el sonido 🔔
+  </div>
 </div>
 
 <!-- ══ COMPLETE OVERLAY ══ -->
@@ -675,6 +704,115 @@ let timerState = {
   running:false,
   timeLeft:0,
 };
+
+/* ════════════ ALERT SETTINGS ════════════ */
+let alertPrefs = { sound: true, vibra: true };
+
+function loadAlertPrefs(){
+  try{
+    const p = localStorage.getItem('gymtrack_alerts');
+    if(p){ const j=JSON.parse(p); alertPrefs.sound=j.sound!==false; alertPrefs.vibra=j.vibra!==false; }
+  }catch(e){}
+  document.getElementById('toggle-sound').classList.toggle('on', alertPrefs.sound);
+  document.getElementById('toggle-vibra').classList.toggle('on', alertPrefs.vibra);
+}
+function saveAlertPrefs(){
+  try{ localStorage.setItem('gymtrack_alerts', JSON.stringify(alertPrefs)); }catch(e){}
+}
+function toggleAlert(type){
+  alertPrefs[type] = !alertPrefs[type];
+  document.getElementById('toggle-'+type).classList.toggle('on', alertPrefs[type]);
+  saveAlertPrefs();
+  // Give instant feedback
+  if(type==='sound' && alertPrefs.sound) playGoSound();
+  if(type==='vibra' && alertPrefs.vibra) triggerVibration();
+}
+
+/* ════════════ AUDIO ENGINE (Web Audio API — sin archivos externos) ════════════ */
+let _audioCtx = null;
+let _audioUnlocked = false;
+
+function getAudioCtx(){
+  if(!_audioCtx){
+    try{
+      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }catch(e){ return null; }
+  }
+  return _audioCtx;
+}
+
+// iOS/Safari require a user gesture to unlock AudioContext.
+// We hook into every tap on the timer overlay to silently unlock it.
+function unlockAudio(){
+  if(_audioUnlocked) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  if(ctx.state === 'suspended'){
+    ctx.resume().then(()=>{
+      _audioUnlocked = true;
+      document.getElementById('audio-unlock-hint').style.display = 'none';
+    }).catch(()=>{});
+  } else {
+    _audioUnlocked = true;
+    document.getElementById('audio-unlock-hint').style.display = 'none';
+  }
+}
+
+document.getElementById('timer-overlay').addEventListener('touchstart', unlockAudio, {passive:true});
+document.getElementById('timer-overlay').addEventListener('click', unlockAudio);
+
+/*
+  Síntesis de "ding" único:
+  - Oscilador sinusoidal a 880 Hz (La5) → ramp down en 0.6s
+  - Segundo oscilador a 1320 Hz (Mi6) atacado 80ms después → ramp down en 0.4s
+  Resultado: un "ding" cristalino en dos fases, parecido a una campana pequeña.
+  Sin archivos de audio, sin dependencias externas.
+*/
+function playGoSound(){
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  if(ctx.state === 'suspended'){
+    // Attempt resume; if it fails (iOS before gesture) show hint
+    ctx.resume().catch(()=>{
+      document.getElementById('audio-unlock-hint').style.display = 'block';
+    });
+    return;
+  }
+
+  const now = ctx.currentTime;
+
+  function ding(freq, startDelay, duration, gain){
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now + startDelay);
+    gainNode.gain.setValueAtTime(0, now + startDelay);
+    gainNode.gain.linearRampToValueAtTime(gain, now + startDelay + 0.01);   // attack 10ms
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + startDelay + duration); // decay
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    osc.start(now + startDelay);
+    osc.stop(now + startDelay + duration + 0.05);
+  }
+
+  // Primera nota: La5 (880 Hz)
+  ding(880,  0.00, 0.55, 0.35);
+  // Segunda nota: Mi6 (1320 Hz) — llegada 80ms después, más corta
+  ding(1320, 0.08, 0.38, 0.22);
+}
+
+/* ════════════ VIBRACIÓN ════════════ */
+function triggerVibration(){
+  if(!('vibrate' in navigator)) return;
+  // Patrón: vibra 120ms, pausa 60ms, vibra 80ms → distintivo y corto
+  try{ navigator.vibrate([120, 60, 80]); }catch(e){}
+}
+
+/* ════════════ DISPARO COMBINADO (GO alert) ════════════ */
+function fireGoAlert(){
+  if(alertPrefs.sound) playGoSound();
+  if(alertPrefs.vibra)  triggerVibration();
+}
 
 /* ════════════ STORAGE ════════════ */
 function loadState(){
@@ -1085,6 +1223,7 @@ function handleStart(){
       timerState.running=false;
       renderTimerUI('go');
       renderDots();
+      fireGoAlert(); // 🔔 sonido + vibración en el momento exacto del GO
     }
   },1000);
 }
@@ -1341,6 +1480,7 @@ document.addEventListener('visibilitychange', ()=>{
 
 function init(){
   loadState();
+  loadAlertPrefs();
   document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
   renderExercises();
   requestWakeLock();
